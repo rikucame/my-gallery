@@ -8,6 +8,8 @@ const StyledFooter = styled.footer`
 `;
 
 const Name = styled.p`
+  font-size: 13px;
+  opacity: 0.6;
   font-weight: 400;
   transform: rotate(-30deg);
 `;
