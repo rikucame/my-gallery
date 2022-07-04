@@ -1,1 +1,1 @@
-# rikutos-gallery
+# my-gallery
