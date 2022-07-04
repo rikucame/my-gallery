@@ -7,8 +7,6 @@ import styled from "styled-components";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { FrameInPhotograph } from "../components/parts/FrameInPhotograph";
 
-// const photoPages = [{ name: portrait }];
-
 const Main = styled.main`
   width: 100%;
   display: flex;

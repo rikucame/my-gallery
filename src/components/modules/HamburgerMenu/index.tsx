@@ -97,7 +97,10 @@ const SocialMediaLink = styled.p`
   padding: 4px;
 `;
 
-const pageLinks = [{ title: "Gallery", path: "/" }];
+const pageLinks = [
+  { title: "Gallery", path: "/" },
+  { title: "Essay", path: "/essay" },
+];
 
 const socialMediaLinks = [
   { app: "Instagram", link: "https://www.instagram.com/rikton_0318/" },
