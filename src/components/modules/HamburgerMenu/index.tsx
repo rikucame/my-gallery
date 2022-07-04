@@ -2,6 +2,7 @@ import { Link } from "gatsby";
 import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import { ExternalLink } from "../../parts/ExternalLink";
 import { colors } from "../../Utils/Colors";
 
 const MenuIcon = styled.button`
@@ -84,10 +85,23 @@ const PageLink = styled(Link)`
   margin-bottom: 8px;
 `;
 
-const pageLinks = [
-  { title: "Gallery", path: "/" },
-  { title: "Portrait", path: "/photos/portrait" },
-  { title: "Contact", path: "/contact" },
+const SocialMediaLinkList = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`;
+
+const SocialMediaLink = styled.p`
+  font-size: 16px;
+  margin-top: 3px;
+  padding: 4px;
+`;
+
+const pageLinks = [{ title: "Gallery", path: "/" }];
+
+const socialMediaLinks = [
+  { app: "Instagram", link: "https://www.instagram.com/rikton_0318/" },
+  { app: "Twitter", link: "https://twitter.com/rikton_0318" },
 ];
 
 export const HamburgerMenu: React.VFC = () => {
@@ -109,6 +123,15 @@ export const HamburgerMenu: React.VFC = () => {
             </PageLink>
           );
         })}
+        <SocialMediaLinkList>
+          {socialMediaLinks.map(({ app, link }) => {
+            return (
+              <ExternalLink href={link}>
+                <SocialMediaLink>{app}</SocialMediaLink>
+              </ExternalLink>
+            );
+          })}
+        </SocialMediaLinkList>
       </Menu>
     </React.Fragment>
   );
