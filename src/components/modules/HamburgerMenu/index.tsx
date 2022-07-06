@@ -121,7 +121,7 @@ export const HamburgerMenu: React.VFC = () => {
       <Menu isOpen={isOpenMenu}>
         {pageLinks.map(({ title, path }) => {
           return (
-            <PageLink to={path} onClick={togleIsOpenMenu}>
+            <PageLink to={path} onClick={togleIsOpenMenu} key={title}>
               {title}
             </PageLink>
           );
@@ -129,7 +129,7 @@ export const HamburgerMenu: React.VFC = () => {
         <SocialMediaLinkList>
           {socialMediaLinks.map(({ app, link }) => {
             return (
-              <ExternalLink href={link}>
+              <ExternalLink href={link} key={app}>
                 <SocialMediaLink>{app}</SocialMediaLink>
               </ExternalLink>
             );

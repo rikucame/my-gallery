@@ -1,5 +1,6 @@
 import { graphql, Link } from "gatsby";
 import { ImageDataLike } from "gatsby-plugin-image";
+import { type } from "os";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { InView } from "react-intersection-observer";
@@ -21,10 +22,12 @@ const ThumbnailsWrap = styled.div`
   }
 `;
 
-const Thumbnails = styled.div<{ count: number }>`
+const Thumbnails = styled.div<{ count: number; animate: boolean }>`
   width: ${({ count }) => 95 * count}%;
   display: flex;
   padding: 15px 0;
+  margin-left: ${({ animate }) => (animate ? 0 : -198)}%;
+  transition: all 0.6s ease-out;
 `;
 
 const PhotoWrap = styled(Link)`
@@ -49,8 +52,11 @@ const InfoWrap = styled.div`
   margin-top: 20px;
 `;
 
-const CategoryName = styled.h2`
+const CategoryName = styled.h2<{ animate: boolean }>`
   font-weight: 700;
+  font-size: ${({ animate }) => (animate ? 30 : 14)}px;
+  transition-delay: 0.4ms;
+  transition: all 0.6s ease-out;
 `;
 
 const ImagesCount = styled.p`
@@ -59,7 +65,7 @@ const ImagesCount = styled.p`
 
 type Props = {
   data: {
-    thumbnail: {
+    allThumbnail: {
       edges: {
         node: {
           name: string;
@@ -69,43 +75,49 @@ type Props = {
       }[];
     };
     count: {
-      group: {
-        totalCount: Number;
-        fieldValue: string;
-      }[];
+      group: Category[];
     };
   };
 };
 
+type Category = {
+  totalCount: number;
+  fieldValue: string;
+};
+
 // markup
 const IndexPage: React.VFC<Props> = ({ data }) => {
-  const { thumbnail, count } = data;
+  const { allThumbnail, count } = data;
+  const [currrentViewCategory, setCurrrentViewCategory] = useState<Category>(
+    count.group.slice(-1)[0]
+  );
+  const [animate, setAnimate] = useState<boolean>(false);
 
-  const [viewPhotoCategory, setViewPhotoCategory] = useState<string>("");
-  const [categoryImagesCount, setCategoryImagesCount] = useState<Number>();
-  useEffect(() => {
-    const viewCount = count.group.find((category) =>
-      category.fieldValue.includes(viewPhotoCategory!)
+  const setCategory = (category: string) => {
+    setCurrrentViewCategory(
+      count.group.find((item) => item.fieldValue.includes(category))!
     );
-    setCategoryImagesCount(viewCount?.totalCount);
-  }, [viewPhotoCategory]);
+  };
+
+  useEffect(() => setAnimate(true), []);
+
   return (
     <React.Fragment>
       <BaseLayout>
         <Main>
           <ThumbnailsWrap>
-            <Thumbnails count={thumbnail.edges.length}>
-              {thumbnail.edges.map(({ node }) => {
+            <Thumbnails count={allThumbnail.edges.length} animate={animate}>
+              {allThumbnail.edges.map(({ node }) => {
                 const path = node.dir.match(/\/photos\/.+/)![0];
                 return (
                   <PhotoWrap key={node.dir} to={path}>
                     <Beacon
                       onChange={(_invew, entry) =>
                         entry.isIntersecting &&
-                        setViewPhotoCategory(entry.target.innerHTML)
+                        setCategory(entry.target.innerHTML)
                       }
                     >
-                      {node.dir.split("_").slice(-1)}
+                      {node.dir.split("_").slice(-1)[0]}
                     </Beacon>
                     <FrameInPhotograph
                       childImageSharp={node.childImageSharp!}
@@ -117,8 +129,13 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
             </Thumbnails>
           </ThumbnailsWrap>
           <InfoWrap>
-            <CategoryName>{viewPhotoCategory.toUpperCase()}</CategoryName>
-            <ImagesCount>{categoryImagesCount} Images</ImagesCount>
+            <CategoryName animate={animate}>
+              {currrentViewCategory.fieldValue
+                .split("_")
+                .slice(-1)[0]
+                .toUpperCase()}
+            </CategoryName>
+            <ImagesCount>{currrentViewCategory.totalCount} Images</ImagesCount>
           </InfoWrap>
         </Main>
       </BaseLayout>
@@ -128,7 +145,7 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
 
 export const pageQuery = graphql`
   query {
-    thumbnail: allFile(
+    allThumbnail: allFile(
       filter: { dir: { regex: "/(photos)/" }, name: { regex: "/(thumbnail)/" } }
       sort: { fields: dir, order: ASC }
     ) {
