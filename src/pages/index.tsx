@@ -1,8 +1,7 @@
 import { graphql, Link } from "gatsby";
 import { ImageDataLike } from "gatsby-plugin-image";
-import { type } from "os";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
 import styled from "styled-components";
 import { BaseLayout } from "../components/Layout/BaseLayout";
@@ -88,18 +87,21 @@ type Category = {
 // markup
 const IndexPage: React.VFC<Props> = ({ data }) => {
   const { allThumbnail, count } = data;
-  const [currrentViewCategory, setCurrrentViewCategory] = useState<Category>(
+  const [viewCategory, setViewCategory] = useState<Category>(
     count.group.slice(-1)[0]
   );
+
   const [animate, setAnimate] = useState<boolean>(false);
-
-  const setCategory = (category: string) => {
-    setCurrrentViewCategory(
-      count.group.find((item) => item.fieldValue.includes(category))!
-    );
-  };
-
   useEffect(() => setAnimate(true), []);
+
+  const setCategory = useCallback((entry: IntersectionObserverEntry) => {
+    entry.isIntersecting &&
+      setViewCategory(
+        count.group.find((item) =>
+          item.fieldValue.includes(entry.target.innerHTML)
+        )!
+      );
+  }, []);
 
   return (
     <React.Fragment>
@@ -111,12 +113,7 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
                 const path = node.dir.match(/\/photos\/.+/)![0];
                 return (
                   <PhotoWrap key={node.dir} to={path}>
-                    <Beacon
-                      onChange={(_invew, entry) =>
-                        entry.isIntersecting &&
-                        setCategory(entry.target.innerHTML)
-                      }
-                    >
+                    <Beacon onChange={(_invew, entry) => setCategory(entry)}>
                       {node.dir.split("_").slice(-1)[0]}
                     </Beacon>
                     <FrameInPhotograph
@@ -130,12 +127,9 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
           </ThumbnailsWrap>
           <InfoWrap>
             <CategoryName animate={animate}>
-              {currrentViewCategory.fieldValue
-                .split("_")
-                .slice(-1)[0]
-                .toUpperCase()}
+              {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
             </CategoryName>
-            <ImagesCount>{currrentViewCategory.totalCount} Images</ImagesCount>
+            <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
           </InfoWrap>
         </Main>
       </BaseLayout>

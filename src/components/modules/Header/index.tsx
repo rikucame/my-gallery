@@ -1,6 +1,6 @@
 import * as React from "react";
+import { memo } from "react";
 import styled from "styled-components";
-import { CreateGlobalStyle } from "../../../GrobalStyle";
 import { HamburgerMenu } from "../HamburgerMenu";
 
 const StyledHeader = styled.header`
@@ -8,11 +8,10 @@ const StyledHeader = styled.header`
   height: 60px;
 `;
 
-export const Header: React.VFC = () => {
+export const Header: React.VFC = memo(() => {
   return (
     <StyledHeader>
-      <CreateGlobalStyle />
       <HamburgerMenu />
     </StyledHeader>
   );
-};
+});

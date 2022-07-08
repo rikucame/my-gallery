@@ -1,5 +1,6 @@
 import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
+import { memo } from "react";
 import styled, { css } from "styled-components";
 
 type Props = {
@@ -7,17 +8,16 @@ type Props = {
   childImageSharp: ImageDataLike;
 };
 
-export const FrameInPhotograph: React.VFC<Props> = ({
-  name,
-  childImageSharp,
-}) => {
-  return (
-    <Frame>
-      <Photograph image={getImage(childImageSharp)!} alt={name} />
-      <FrameShadow />
-    </Frame>
-  );
-};
+export const FrameInPhotograph: React.VFC<Props> = memo(
+  ({ name, childImageSharp }) => {
+    return (
+      <Frame>
+        <Photograph image={getImage(childImageSharp)!} alt={name} />
+        <FrameShadow />
+      </Frame>
+    );
+  }
+);
 
 const Frame = styled.div`
   border: #333 8px solid;
