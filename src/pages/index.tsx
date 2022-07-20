@@ -3,7 +3,9 @@ import { ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
+import { isHistoryBack } from "../atoms/isHistoryBack";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { FrameInPhotograph } from "../components/parts/FrameInPhotograph";
 
@@ -63,6 +65,8 @@ const ImagesCount = styled.p`
 `;
 
 type Props = {
+  location: Location;
+  history: History;
   data: {
     allThumbnail: {
       edges: {
@@ -91,7 +95,7 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
     count.group.slice(-1)[0]
   );
 
-  const [animate, setAnimate] = useState<boolean>(false);
+  const [animate, setAnimate] = useRecoilState(isHistoryBack);
   useEffect(() => setAnimate(true), []);
 
   const setCategory = useCallback((entry: IntersectionObserverEntry) => {
@@ -102,7 +106,6 @@ const IndexPage: React.VFC<Props> = ({ data }) => {
         )!
       );
   }, []);
-
   return (
     <React.Fragment>
       <BaseLayout>
@@ -148,7 +151,7 @@ export const pageQuery = graphql`
           name
           dir
           childImageSharp {
-            gatsbyImageData(blurredOptions: { width: 100 }, width: 900)
+            gatsbyImageData(blurredOptions: { width: 100 }, height: 900)
           }
         }
       }
