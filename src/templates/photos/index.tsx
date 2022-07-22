@@ -14,36 +14,43 @@ const PhotographWrap = styled.div`
   margin-bottom: 40px;
 `;
 
-type Props = {
+type Photos = {
+  node: {
+    name: string;
+    childImageSharp: ImageDataLike;
+  };
+}[];
+
+type PageProps = {
   data: {
     allFile: {
-      edges: {
-        node: {
-          name: string;
-          childImageSharp: ImageDataLike;
-        };
-      }[];
+      edges: Photos;
     };
   };
 };
 
-// markup
-const IndexPage: React.VFC<Props> = ({ data }) => {
+const PageContent: React.VFC<{ photos: Photos }> = ({ photos }) => {
+  return (
+    <Main>
+      {photos.map(({ node }) => {
+        return (
+          <PhotographWrap>
+            <Photograph
+              childImageSharp={node.childImageSharp!}
+              name={node.name}
+              key={node.name}
+            />
+          </PhotographWrap>
+        );
+      })}
+    </Main>
+  );
+};
+
+const PhotosPage: React.VFC<PageProps> = ({ data }) => {
   return (
     <BaseLayout>
-      <Main>
-        {data.allFile.edges.map(({ node }) => {
-          return (
-            <PhotographWrap>
-              <Photograph
-                childImageSharp={node.childImageSharp!}
-                name={node.name}
-                key={node.name}
-              />
-            </PhotographWrap>
-          );
-        })}
-      </Main>
+      <PageContent photos={data.allFile.edges} />
     </BaseLayout>
   );
 };
@@ -63,4 +70,4 @@ export const pageQuery = graphql`
   }
 `;
 
-export default IndexPage;
+export default PhotosPage;

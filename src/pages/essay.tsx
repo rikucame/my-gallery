@@ -16,15 +16,14 @@ const Message = styled.h1`
 `;
 
 // markup
-const Essay: React.VFC = () => {
+const Essay: React.VFC = (props) => {
+  console.log(props);
   return (
-    <React.Fragment>
-      <BaseLayout>
-        <Main>
-          <Message>Comming Soon</Message>
-        </Main>
-      </BaseLayout>
-    </React.Fragment>
+    <BaseLayout>
+      <Main>
+        <Message>Comming Soon</Message>
+      </Main>
+    </BaseLayout>
   );
 };
 

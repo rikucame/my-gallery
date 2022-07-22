@@ -64,79 +64,88 @@ const ImagesCount = styled.p`
   font-weight: 400;
 `;
 
-type Props = {
-  location: Location;
-  history: History;
-  data: {
-    allThumbnail: {
-      edges: {
-        node: {
-          name: string;
-          dir: string;
-          childImageSharp: ImageDataLike;
-        };
-      }[];
+type Category = {
+  totalCount: number;
+  fieldValue: string;
+};
+
+type AllThumbnails = {
+  edges: {
+    node: {
+      name: string;
+      dir: string;
+      childImageSharp: ImageDataLike;
     };
+  }[];
+};
+
+type PageProps = {
+  location: any;
+  prevLocation: any;
+  data: {
+    allThumbnail: AllThumbnails;
     count: {
       group: Category[];
     };
   };
 };
 
-type Category = {
-  totalCount: number;
-  fieldValue: string;
-};
-
-// markup
-const IndexPage: React.VFC<Props> = ({ data }) => {
-  const { allThumbnail, count } = data;
+const PageContent: React.VFC<{
+  categories: Category[];
+  allThumbnails: AllThumbnails;
+}> = ({ categories, allThumbnails }) => {
   const [viewCategory, setViewCategory] = useState<Category>(
-    count.group.slice(-1)[0]
+    categories.slice(-1)[0]
   );
 
   const [animate, setAnimate] = useRecoilState(isHistoryBack);
+
   useEffect(() => setAnimate(true), []);
 
   const setCategory = useCallback((entry: IntersectionObserverEntry) => {
     entry.isIntersecting &&
       setViewCategory(
-        count.group.find((item) =>
+        categories.find((item) =>
           item.fieldValue.includes(entry.target.innerHTML)
         )!
       );
   }, []);
   return (
-    <React.Fragment>
-      <BaseLayout>
-        <Main>
-          <ThumbnailsWrap>
-            <Thumbnails count={allThumbnail.edges.length} animate={animate}>
-              {allThumbnail.edges.map(({ node }) => {
-                const path = node.dir.match(/\/photos\/.+/)![0];
-                return (
-                  <PhotoWrap key={node.dir} to={path}>
-                    <Beacon onChange={(_invew, entry) => setCategory(entry)}>
-                      {node.dir.split("_").slice(-1)[0]}
-                    </Beacon>
-                    <FrameInPhotograph
-                      childImageSharp={node.childImageSharp!}
-                      name={node.name}
-                    />
-                  </PhotoWrap>
-                );
-              })}
-            </Thumbnails>
-          </ThumbnailsWrap>
-          <InfoWrap>
-            <CategoryName animate={animate}>
-              {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
-            </CategoryName>
-            <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
-          </InfoWrap>
-        </Main>
-      </BaseLayout>
-    </React.Fragment>
+    <Main>
+      <ThumbnailsWrap>
+        <Thumbnails count={allThumbnails.edges.length} animate={animate}>
+          {allThumbnails.edges.map(({ node }) => {
+            const path = node.dir.match(/\/photos\/.+/)![0];
+            return (
+              <PhotoWrap key={node.dir} to={path}>
+                <Beacon onChange={(_invew, entry) => setCategory(entry)}>
+                  {node.dir.split("_").slice(-1)[0]}
+                </Beacon>
+                <FrameInPhotograph
+                  childImageSharp={node.childImageSharp!}
+                  name={node.name}
+                />
+              </PhotoWrap>
+            );
+          })}
+        </Thumbnails>
+      </ThumbnailsWrap>
+      <InfoWrap>
+        <CategoryName animate={animate}>
+          {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
+        </CategoryName>
+        <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
+      </InfoWrap>
+    </Main>
+  );
+};
+
+const IndexPage: React.VFC<PageProps> = ({ data, location, prevLocation }) => {
+  const { allThumbnail, count } = data;
+  return (
+    <BaseLayout>
+      <PageContent categories={count.group} allThumbnails={allThumbnail} />
+    </BaseLayout>
   );
 };
 

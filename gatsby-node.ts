@@ -31,7 +31,6 @@ export const createPages: GatsbyNode["createPages"] = async ({
       path: `/photos/${name}`,
       component: productTemplate,
       context: {
-        // This time the entire product is passed down as context
         dirPath: absolutePath,
       },
     });
