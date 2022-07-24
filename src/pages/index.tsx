@@ -3,9 +3,9 @@ import { ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { isHistoryBack } from "../atoms/isHistoryBack";
+import { memoScrollLeft } from "../atoms/memoScrollLeft";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { FrameInPhotograph } from "../components/parts/FrameInPhotograph";
 
@@ -17,7 +17,8 @@ const Main = styled.main`
 
 const ThumbnailsWrap = styled.div`
   width: 100%;
-  overflow: scroll;
+  overflow: auto;
+  scroll-behavior: smooth;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -94,33 +95,43 @@ const PageContent: React.VFC<{
   categories: Category[];
   allThumbnails: AllThumbnails;
 }> = ({ categories, allThumbnails }) => {
+  const elm = React.useRef<HTMLDivElement>(null);
   const [viewCategory, setViewCategory] = useState<Category>(
     categories.slice(-1)[0]
   );
 
-  const [animate, setAnimate] = useRecoilState(isHistoryBack);
+  const setCategory = useCallback(
+    (entry: IntersectionObserverEntry, categoryName: string) => {
+      if (entry.isIntersecting) {
+        setViewCategory(
+          categories.find((item) => item.fieldValue.includes(categoryName))!
+        );
+      }
+    },
+    []
+  );
 
-  useEffect(() => setAnimate(true), []);
+  const [animate, firstVisit] = isHistoryBack();
+  const [_, setScrollLeftAmount, doScroll] = memoScrollLeft(elm);
 
-  const setCategory = useCallback((entry: IntersectionObserverEntry) => {
-    entry.isIntersecting &&
-      setViewCategory(
-        categories.find((item) =>
-          item.fieldValue.includes(entry.target.innerHTML)
-        )!
-      );
+  useEffect(() => {
+    firstVisit();
+    doScroll();
   }, []);
+
   return (
     <Main>
-      <ThumbnailsWrap>
+      <ThumbnailsWrap ref={elm}>
         <Thumbnails count={allThumbnails.edges.length} animate={animate}>
           {allThumbnails.edges.map(({ node }) => {
             const path = node.dir.match(/\/photos\/.+/)![0];
             return (
-              <PhotoWrap key={node.dir} to={path}>
-                <Beacon onChange={(_invew, entry) => setCategory(entry)}>
-                  {node.dir.split("_").slice(-1)[0]}
-                </Beacon>
+              <PhotoWrap key={node.dir} to={path} onClick={setScrollLeftAmount}>
+                <Beacon
+                  onChange={(_invew, entry) =>
+                    setCategory(entry, node.dir.split("_").slice(-1)[0])
+                  }
+                />
                 <FrameInPhotograph
                   childImageSharp={node.childImageSharp!}
                   name={node.name}
