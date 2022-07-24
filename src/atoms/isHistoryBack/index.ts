@@ -1,6 +1,14 @@
-import { atom } from "recoil";
+import { atom, useRecoilState } from "recoil";
 
-export const isHistoryBack = atom<boolean>({
+const isHistoryBackAtom = atom<boolean>({
   key: "isHistoryBack",
   default: false,
 });
+
+export const isHistoryBack = (): [boolean, () => void] => {
+  const [atom, setAtom] = useRecoilState(isHistoryBackAtom);
+  const customSetAtom = () => {
+    !atom && setAtom(true);
+  };
+  return [atom, customSetAtom];
+};
