@@ -1,4 +1,5 @@
 import * as React from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
 const StyledFooter = styled.footer`
@@ -14,10 +15,10 @@ const Name = styled.p`
   transform: rotate(-30deg);
 `;
 
-export const Footer: React.VFC = () => {
+export const Footer: React.VFC = memo(() => {
   return (
     <StyledFooter>
       <Name>RIKUTO</Name>
     </StyledFooter>
   );
-};
+});
