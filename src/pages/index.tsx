@@ -111,26 +111,23 @@ const PageContent: React.VFC<{
     []
   );
 
-  const [animate, firstVisit] = isHistoryBack();
+  const [isFirstVisit, Visit] = isHistoryBack();
   const [_, setScrollLeftAmount, doScroll] = memoScrollLeft(elm);
-
   useEffect(() => {
-    firstVisit();
+    Visit();
     doScroll();
   }, []);
 
   return (
     <Main>
       <ThumbnailsWrap ref={elm}>
-        <Thumbnails count={allThumbnails.edges.length} animate={animate}>
+        <Thumbnails count={allThumbnails.edges.length} animate={isFirstVisit}>
           {allThumbnails.edges.map(({ node }) => {
-            const path = node.dir.match(/\/photos\/.+/)![0];
+            const path = node.dir.split("images").slice(-1)[0];
             return (
               <PhotoWrap key={node.dir} to={path} onClick={setScrollLeftAmount}>
                 <Beacon
-                  onChange={(_invew, entry) =>
-                    setCategory(entry, node.dir.split("_").slice(-1)[0])
-                  }
+                  onChange={(_invew, entry) => setCategory(entry, node.dir)}
                 />
                 <FrameInPhotograph
                   childImageSharp={node.childImageSharp!}
@@ -142,7 +139,7 @@ const PageContent: React.VFC<{
         </Thumbnails>
       </ThumbnailsWrap>
       <InfoWrap>
-        <CategoryName animate={animate}>
+        <CategoryName animate={isFirstVisit}>
           {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
         </CategoryName>
         <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
@@ -151,7 +148,7 @@ const PageContent: React.VFC<{
   );
 };
 
-const IndexPage: React.VFC<PageProps> = ({ data, location, prevLocation }) => {
+const IndexPage: React.VFC<PageProps> = ({ data }) => {
   const { allThumbnail, count } = data;
   return (
     <BaseLayout>
