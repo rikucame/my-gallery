@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
 import styled from "styled-components";
-import { isHistoryBack } from "../atoms/isHistoryBack";
 import { memoScrollLeft } from "../atoms/memoScrollLeft";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { FrameInPhotograph } from "../components/parts/FrameInPhotograph";
@@ -18,22 +17,23 @@ const Main = styled.main`
 const ThumbnailsWrap = styled.div`
   width: 100%;
   overflow: auto;
-  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
-const Thumbnails = styled.div<{ count: number; animate: boolean }>`
+const Thumbnails = styled.div<{ count: number }>`
   width: ${({ count }) => 95 * count}%;
   display: flex;
   padding: 15px 0;
-  margin-left: ${({ animate }) => (animate ? 0 : -198)}%;
   transition: all 0.6s ease-out;
 `;
 
 const PhotoWrap = styled(Link)`
-  margin-left: 45px;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  margin-left: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,9 +54,9 @@ const InfoWrap = styled.div`
   margin-top: 20px;
 `;
 
-const CategoryName = styled.h2<{ animate: boolean }>`
+const CategoryName = styled.h2`
   font-weight: 700;
-  font-size: ${({ animate }) => (animate ? 30 : 14)}px;
+  font-size: 30px;
   transition-delay: 0.4ms;
   transition: all 0.6s ease-out;
 `;
@@ -102,26 +102,23 @@ const PageContent: React.VFC<{
 
   const setCategory = useCallback(
     (entry: IntersectionObserverEntry, categoryName: string) => {
-      if (entry.isIntersecting) {
+      entry.isIntersecting &&
         setViewCategory(
-          categories.find((item) => item.fieldValue.includes(categoryName))!
+          categories.find(({ fieldValue }) => fieldValue === categoryName)!
         );
-      }
     },
     []
   );
 
-  const [isFirstVisit, Visit] = isHistoryBack();
   const [_, setScrollLeftAmount, doScroll] = memoScrollLeft(elm);
   useEffect(() => {
-    Visit();
     doScroll();
   }, []);
 
   return (
     <Main>
       <ThumbnailsWrap ref={elm}>
-        <Thumbnails count={allThumbnails.edges.length} animate={isFirstVisit}>
+        <Thumbnails count={allThumbnails.edges.length}>
           {allThumbnails.edges.map(({ node }) => {
             const path = node.dir.split("images").slice(-1)[0];
             return (
@@ -139,7 +136,7 @@ const PageContent: React.VFC<{
         </Thumbnails>
       </ThumbnailsWrap>
       <InfoWrap>
-        <CategoryName animate={isFirstVisit}>
+        <CategoryName>
           {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
         </CategoryName>
         <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
