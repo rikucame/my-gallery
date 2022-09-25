@@ -98,8 +98,8 @@ const SocialMediaLink = styled.p`
 `;
 
 const pageLinks = [
-  { title: "Gallery", path: "/" },
-  { title: "Essay", path: "/essay" },
+  { title: "Top", path: "/" },
+  { title: "Genre", path: "/genre" },
 ];
 
 const socialMediaLinks = [
