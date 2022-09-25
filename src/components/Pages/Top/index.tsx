@@ -6,6 +6,7 @@ import { InView } from "react-intersection-observer";
 import styled from "styled-components";
 import { memoScrollLeft } from "../../../atoms/memoScrollLeft";
 import { FrameInPhotograph } from "../../parts/FrameInPhotograph";
+import { colors } from "../../Utils/Colors";
 
 const Main = styled.main`
   width: 100%;
@@ -47,13 +48,13 @@ const Beacon = styled(InView)`
   width: 1px;
 `;
 
-const InfoWrap = styled.div`
+const InfoWrap = styled(Link)`
   align-self: center;
   display: inline-block;
   margin-top: 20px;
 `;
 
-const CategoryName = styled.h2`
+const CategoryName = styled.h1`
   font-weight: 700;
   font-size: 30px;
   transition-delay: 0.4ms;
@@ -78,6 +79,29 @@ export type AllThumbnails = {
     };
   }[];
 };
+
+const Dots = styled.ul`
+  display: flex;
+  justify-content: center;
+`;
+const Dot = styled.li<{ view: boolean }>`
+  width: 19px;
+  height: 19px;
+  padding: 3px;
+  list-style: none;
+  font-size: ${({ view }) => (view ? 30 : 10)}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &::before {
+    content: "";
+    display: block;
+    width: ${({ view }) => (view ? 100 : 50)}%;
+    height: ${({ view }) => (view ? 100 : 50)}%;
+    border-radius: 50%;
+    background-color: ${({ view }) => (view ? colors.black : colors.gray)};
+  }
+`;
 
 export const Top: React.VFC<{
   categories: Category[];
@@ -105,6 +129,11 @@ export const Top: React.VFC<{
 
   return (
     <Main>
+      <Dots>
+        {categories.map(({ fieldValue }) => {
+          return <Dot view={fieldValue === viewCategory.fieldValue} />;
+        })}
+      </Dots>
       <ThumbnailsWrap ref={elm}>
         <Thumbnails count={allThumbnails.edges.length}>
           {allThumbnails.edges.map(({ node }) => {
@@ -123,7 +152,7 @@ export const Top: React.VFC<{
           })}
         </Thumbnails>
       </ThumbnailsWrap>
-      <InfoWrap>
+      <InfoWrap to={viewCategory.fieldValue.split("images").slice(-1)[0]}>
         <CategoryName>
           {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
         </CategoryName>
