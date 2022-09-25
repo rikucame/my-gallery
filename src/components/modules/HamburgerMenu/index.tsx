@@ -109,19 +109,21 @@ const socialMediaLinks = [
 
 export const HamburgerMenu: React.VFC = () => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const togleIsOpenMenu = () => setIsOpenMenu(!isOpenMenu);
+  const OpenMenu = () => setIsOpenMenu(true);
+  const CloseMenu = () => setIsOpenMenu(false);
   return (
     <React.Fragment>
       {isOpenMenu ? (
-        <CloseMenuIcon onClick={togleIsOpenMenu} />
+        <CloseMenuIcon onClick={CloseMenu} />
       ) : (
-        <OpenMenuIcon onClick={togleIsOpenMenu} />
+        <OpenMenuIcon onClick={OpenMenu} />
       )}
+      {isOpenMenu && <ChangeCloseArea onClick={CloseMenu} />}
       <MenuBackGround isOpen={isOpenMenu} />
       <Menu isOpen={isOpenMenu}>
         {pageLinks.map(({ title, path }) => {
           return (
-            <PageLink to={path} onClick={togleIsOpenMenu} key={title}>
+            <PageLink to={path} onClick={CloseMenu} key={title}>
               {title}
             </PageLink>
           );
@@ -139,3 +141,11 @@ export const HamburgerMenu: React.VFC = () => {
     </React.Fragment>
   );
 };
+
+const ChangeCloseArea = styled.div`
+  height: 100vh;
+  z-index: 10;
+  position: relative;
+  top: 0;
+  left: 0;
+`;
