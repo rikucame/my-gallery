@@ -85,7 +85,7 @@ const Dot = styled.li<{ view: boolean }>`
     width: ${({ view }) => (view ? 80 : 50)}%;
     height: ${({ view }) => (view ? 80 : 50)}%;
     border-radius: 50%;
-    background-color: ${({ view }) => (view ? colors.black : colors.gray)};
+    background-color: ${({ view }) => (view ? colors.blue : colors.gray)};
   }
 `;
 

@@ -4,6 +4,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { ExternalLink } from "../../parts/ExternalLink";
 import { colors } from "../../Utils/Colors";
+import { TiSocialTwitter } from "@react-icons/all-files/ti/TiSocialTwitter";
+import { TiSocialInstagram } from "@react-icons/all-files/ti/TiSocialInstagram";
 
 const MenuIcon = styled.button`
   position: fixed;
@@ -87,14 +89,9 @@ const PageLink = styled(Link)`
 
 const SocialMediaLinkList = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   margin-top: 20px;
-`;
-
-const SocialMediaLink = styled.p`
-  font-size: 16px;
-  margin-top: 3px;
-  padding: 4px;
+  min-width: 60px;
 `;
 
 const pageLinks = [
@@ -103,8 +100,11 @@ const pageLinks = [
 ];
 
 const socialMediaLinks = [
-  { app: "Instagram", link: "https://www.instagram.com/rikton_0318/" },
-  { app: "Twitter", link: "https://twitter.com/rikton_0318" },
+  {
+    IconImage: TiSocialTwitter,
+    link: "https://www.instagram.com/rikton_0318/",
+  },
+  { IconImage: TiSocialInstagram, link: "https://twitter.com/rikton_0318" },
 ];
 
 export const HamburgerMenu: React.VFC = () => {
@@ -129,10 +129,10 @@ export const HamburgerMenu: React.VFC = () => {
           );
         })}
         <SocialMediaLinkList>
-          {socialMediaLinks.map(({ app, link }) => {
+          {socialMediaLinks.map(({ IconImage, link }) => {
             return (
-              <ExternalLink href={link} key={app}>
-                <SocialMediaLink>{app}</SocialMediaLink>
+              <ExternalLink href={link} key={link}>
+                <IconImage color={colors.blue} size={22} />
               </ExternalLink>
             );
           })}
