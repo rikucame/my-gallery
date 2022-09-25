@@ -65,6 +65,30 @@ const ImagesCount = styled.p`
   font-weight: 400;
 `;
 
+const Dots = styled.ul`
+  display: flex;
+  justify-content: center;
+`;
+
+const Dot = styled.li<{ view: boolean }>`
+  width: 19px;
+  height: 19px;
+  padding: 3px;
+  list-style: none;
+  font-size: ${({ view }) => (view ? 30 : 10)}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &::before {
+    content: "";
+    display: block;
+    width: ${({ view }) => (view ? 80 : 50)}%;
+    height: ${({ view }) => (view ? 80 : 50)}%;
+    border-radius: 50%;
+    background-color: ${({ view }) => (view ? colors.black : colors.gray)};
+  }
+`;
+
 export type Category = {
   totalCount: number;
   fieldValue: string;
@@ -79,29 +103,6 @@ export type AllThumbnails = {
     };
   }[];
 };
-
-const Dots = styled.ul`
-  display: flex;
-  justify-content: center;
-`;
-const Dot = styled.li<{ view: boolean }>`
-  width: 19px;
-  height: 19px;
-  padding: 3px;
-  list-style: none;
-  font-size: ${({ view }) => (view ? 30 : 10)}px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &::before {
-    content: "";
-    display: block;
-    width: ${({ view }) => (view ? 100 : 50)}%;
-    height: ${({ view }) => (view ? 100 : 50)}%;
-    border-radius: 50%;
-    background-color: ${({ view }) => (view ? colors.black : colors.gray)};
-  }
-`;
 
 export const Top: React.VFC<{
   categories: Category[];
