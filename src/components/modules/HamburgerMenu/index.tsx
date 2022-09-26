@@ -91,12 +91,12 @@ const SocialMediaLinkList = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  min-width: 60px;
+  width: 60px;
 `;
 
 const pageLinks = [
   { title: "Top", path: "/" },
-  { title: "Genre", path: "/genre" },
+  { title: "Catalog", path: "/catalog" },
 ];
 
 const socialMediaLinks = [
