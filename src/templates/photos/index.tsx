@@ -1,5 +1,5 @@
 import { graphql } from "gatsby";
-import { ImageDataLike } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
 import styled from "styled-components";
 import { BaseLayout } from "../../components/Layout/BaseLayout";
@@ -10,9 +10,7 @@ const Main = styled.main`
   margin: 15px 6%;
 `;
 
-const PhotographWrap = styled.div`
-  margin-bottom: 40px;
-`;
+const PhotographWrap = styled.div``;
 
 type Photos = {
   node: {
@@ -29,20 +27,27 @@ type PageProps = {
   };
 };
 
+const Photos = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 30px;
+`;
+
 const PageContent: React.VFC<{ photos: Photos }> = ({ photos }) => {
   return (
     <Main>
-      {photos.map(({ node }) => {
-        return (
-          <PhotographWrap>
-            <Photograph
-              childImageSharp={node.childImageSharp!}
-              name={node.name}
-              key={node.name}
-            />
-          </PhotographWrap>
-        );
-      })}
+      <Photos>
+        {photos.map(({ node }) => {
+          return (
+            <PhotographWrap>
+              <GatsbyImage
+                image={getImage(node.childImageSharp)!}
+                alt={node.name}
+              />
+            </PhotographWrap>
+          );
+        })}
+      </Photos>
     </Main>
   );
 };
@@ -57,7 +62,10 @@ const PhotosPage: React.VFC<PageProps> = ({ data }) => {
 
 export const pageQuery = graphql`
   query ($dirPath: String!) {
-    allFile(filter: { dir: { eq: $dirPath } }) {
+    allFile(
+      filter: { dir: { eq: $dirPath } }
+      sort: { fields: name, order: ASC }
+    ) {
       edges {
         node {
           name
