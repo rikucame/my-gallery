@@ -1,18 +1,10 @@
 import { graphql } from "gatsby";
-import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
+import { ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
-import styled from "styled-components";
 import { BaseLayout } from "../../components/Layout/BaseLayout";
-import { Photograph } from "../../components/parts/Photograph";
+import { Photos } from "../../components/Templates/Photos";
 
-const Main = styled.main`
-  width: 88%;
-  margin: 15px 6%;
-`;
-
-const PhotographWrap = styled.div``;
-
-type Photos = {
+export type PhotosType = {
   node: {
     name: string;
     childImageSharp: ImageDataLike;
@@ -22,40 +14,15 @@ type Photos = {
 type PageProps = {
   data: {
     allFile: {
-      edges: Photos;
+      edges: PhotosType;
     };
   };
-};
-
-const Photos = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 30px;
-`;
-
-const PageContent: React.VFC<{ photos: Photos }> = ({ photos }) => {
-  return (
-    <Main>
-      <Photos>
-        {photos.map(({ node }) => {
-          return (
-            <PhotographWrap>
-              <GatsbyImage
-                image={getImage(node.childImageSharp)!}
-                alt={node.name}
-              />
-            </PhotographWrap>
-          );
-        })}
-      </Photos>
-    </Main>
-  );
 };
 
 const PhotosPage: React.VFC<PageProps> = ({ data }) => {
   return (
     <BaseLayout>
-      <PageContent photos={data.allFile.edges} />
+      <Photos photos={data.allFile.edges} />
     </BaseLayout>
   );
 };

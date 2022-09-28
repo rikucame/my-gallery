@@ -20,12 +20,13 @@ const MenuIcon = styled.button`
   &::after {
     content: "";
     position: absolute;
-    background-color: ${colors.black};
+    background-color: ${colors.blue};
   }
+  mix-blend-mode: difference;
 `;
 
 const OpenMenuIcon = styled(MenuIcon)`
-  border-top: 2px solid ${colors.black};
+  border-top: 2px solid ${colors.blue};
   &::before,
   &::after {
     height: 2px;
