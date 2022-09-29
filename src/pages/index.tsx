@@ -2,18 +2,24 @@ import { graphql } from "gatsby";
 import React from "react";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { SeoProps } from "../components/modules/Head";
-import { AllThumbnails, Category, Top } from "../components/Pages/Top";
+import { Thumbnail, Category, Top } from "../components/Pages/Top";
 
 type PageProps = {
   location: any;
   prevLocation: any;
   data: {
-    allThumbnail: AllThumbnails;
+    allThumbnail: {
+      edges: {
+        node: Thumbnail;
+      }[];
+    };
     count: {
       group: Category[];
     };
   };
 };
+
+const viewOrder = ["portrait", "snap", "mood"];
 
 const IndexPage: React.VFC<PageProps> = ({ data }) => {
   const { allThumbnail, count } = data;
@@ -21,9 +27,20 @@ const IndexPage: React.VFC<PageProps> = ({ data }) => {
     title: "",
     absolutePath: "",
   };
+  const categoryInfos = count.group.map(({ totalCount, fieldValue }) => ({
+    totalCount,
+    fieldValue: fieldValue.split("/").slice(-1)[0],
+  }));
+  const thumbnails = allThumbnail.edges
+    .map(({ node }) => ({
+      dir: node.dir.split("/").slice(-1)[0],
+      name: node.name,
+      childImageSharp: node.childImageSharp,
+    }))
+    .sort((x, y) => viewOrder.indexOf(x.dir) - viewOrder.indexOf(y.dir));
   return (
     <BaseLayout seo={seo}>
-      <Top categories={count.group} allThumbnails={allThumbnail} />
+      <Top categories={categoryInfos} Thumbnails={thumbnails} />
     </BaseLayout>
   );
 };

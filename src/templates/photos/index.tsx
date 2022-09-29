@@ -2,9 +2,9 @@ import { graphql } from "gatsby";
 import { ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
 import { BaseLayout } from "../../components/Layout/BaseLayout";
-import { SeoProps } from "../../components/modules/Head";
 import { Photos } from "../../components/Templates/Photos";
 import { useLocation } from "@reach/router";
+import { generateSeo } from "../../components/Utils/GenerateSeo";
 
 export type PhotosType = {
   node: {
@@ -22,13 +22,8 @@ type PageProps = {
 };
 
 const PhotosPage: React.VFC<PageProps> = ({ data }) => {
-  const location = useLocation();
-  const seo: SeoProps = {
-    title: location.pathname.split("_").slice(-1)[0],
-    absolutePath: location.pathname,
-  };
   return (
-    <BaseLayout seo={seo}>
+    <BaseLayout seo={generateSeo(useLocation())}>
       <Photos photos={data.allFile.edges} />
     </BaseLayout>
   );
