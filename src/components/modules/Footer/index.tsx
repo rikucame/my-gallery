@@ -1,6 +1,7 @@
 import * as React from "react";
 import { memo } from "react";
 import styled from "styled-components";
+import { colors } from "../../Utils/Colors";
 
 const StyledFooter = styled.footer`
   position: fixed;
@@ -10,7 +11,7 @@ const StyledFooter = styled.footer`
 
 const Name = styled.p`
   font-size: 13px;
-  opacity: 0.6;
+  color: ${colors.blue};
   font-weight: 400;
   transform: rotate(-30deg);
 `;

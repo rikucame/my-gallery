@@ -4,6 +4,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { ExternalLink } from "../../parts/ExternalLink";
 import { colors } from "../../Utils/Colors";
+import { TiSocialTwitter } from "@react-icons/all-files/ti/TiSocialTwitter";
+import { TiSocialInstagram } from "@react-icons/all-files/ti/TiSocialInstagram";
 
 const MenuIcon = styled.button`
   position: fixed;
@@ -18,12 +20,13 @@ const MenuIcon = styled.button`
   &::after {
     content: "";
     position: absolute;
-    background-color: ${colors.black};
+    background-color: ${colors.blue};
   }
+  mix-blend-mode: difference;
 `;
 
 const OpenMenuIcon = styled(MenuIcon)`
-  border-top: 2px solid ${colors.black};
+  border-top: 2px solid ${colors.blue};
   &::before,
   &::after {
     height: 2px;
@@ -87,50 +90,50 @@ const PageLink = styled(Link)`
 
 const SocialMediaLinkList = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   margin-top: 20px;
-`;
-
-const SocialMediaLink = styled.p`
-  font-size: 16px;
-  margin-top: 3px;
-  padding: 4px;
+  width: 60px;
 `;
 
 const pageLinks = [
-  { title: "Gallery", path: "/" },
-  { title: "Essay", path: "/essay" },
+  { title: "Top", path: "/" },
+  { title: "Catalog", path: "/catalog" },
 ];
 
 const socialMediaLinks = [
-  { app: "Instagram", link: "https://www.instagram.com/rikton_0318/" },
-  { app: "Twitter", link: "https://twitter.com/rikton_0318" },
+  {
+    IconImage: TiSocialTwitter,
+    link: "https://www.instagram.com/rikton_0318/",
+  },
+  { IconImage: TiSocialInstagram, link: "https://twitter.com/rikton_0318" },
 ];
 
 export const HamburgerMenu: React.VFC = () => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const togleIsOpenMenu = () => setIsOpenMenu(!isOpenMenu);
+  const OpenMenu = () => setIsOpenMenu(true);
+  const CloseMenu = () => setIsOpenMenu(false);
   return (
     <React.Fragment>
       {isOpenMenu ? (
-        <CloseMenuIcon onClick={togleIsOpenMenu} />
+        <CloseMenuIcon onClick={CloseMenu} />
       ) : (
-        <OpenMenuIcon onClick={togleIsOpenMenu} />
+        <OpenMenuIcon onClick={OpenMenu} />
       )}
+      {isOpenMenu && <ChangeCloseArea onClick={CloseMenu} />}
       <MenuBackGround isOpen={isOpenMenu} />
       <Menu isOpen={isOpenMenu}>
         {pageLinks.map(({ title, path }) => {
           return (
-            <PageLink to={path} onClick={togleIsOpenMenu} key={title}>
+            <PageLink to={path} onClick={CloseMenu} key={title}>
               {title}
             </PageLink>
           );
         })}
         <SocialMediaLinkList>
-          {socialMediaLinks.map(({ app, link }) => {
+          {socialMediaLinks.map(({ IconImage, link }) => {
             return (
-              <ExternalLink href={link} key={app}>
-                <SocialMediaLink>{app}</SocialMediaLink>
+              <ExternalLink href={link} key={link}>
+                <IconImage color={colors.blue} size={22} />
               </ExternalLink>
             );
           })}
@@ -139,3 +142,11 @@ export const HamburgerMenu: React.VFC = () => {
     </React.Fragment>
   );
 };
+
+const ChangeCloseArea = styled.div`
+  height: 100vh;
+  z-index: 10;
+  position: relative;
+  top: 0;
+  left: 0;
+`;

@@ -7,8 +7,11 @@ export const Head: React.VFC = memo(() => {
   return (
     <>
       <Helmet
+        title="Rikuto Ishikura"
         link={[
+          { lang: "ja" },
           { rel: "stylesheet", href: "https://use.typekit.net/lpr1vrm.css" },
+          { rel: "icon", type: "image/svg", href: "/icon.png" },
         ]}
       />
       <CreateGlobalStyle />
