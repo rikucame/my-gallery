@@ -1,6 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 import { BaseLayout } from "../components/Layout/BaseLayout";
+import { useLocation } from "@reach/router";
+import { generateSeo } from "../components/Utils/GenerateSeo";
 
 const Main = styled.main`
   width: 100%;
@@ -17,9 +19,8 @@ const Message = styled.h1`
 
 // markup
 const Essay: React.VFC = (props) => {
-  console.log(props);
   return (
-    <BaseLayout>
+    <BaseLayout seo={generateSeo(useLocation())}>
       <Main>
         <Message>Comming Soon</Message>
       </Main>

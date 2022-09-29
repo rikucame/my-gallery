@@ -1,5 +1,7 @@
 import * as React from "react";
 import { BaseLayout } from "../components/Layout/BaseLayout";
+import { useLocation } from "@reach/router";
+import { generateSeo } from "../components/Utils/GenerateSeo";
 import { Catalog as CatalogList } from "../components/Pages/Catalog";
 
 const catalog: CatalogItemsProps = [
@@ -25,10 +27,12 @@ export type CatalogItemsProps = {
   }[];
 }[];
 
-const Catalog: React.VFC = () => (
-  <BaseLayout>
-    <CatalogList catalog={catalog} />
-  </BaseLayout>
-);
+const Catalog: React.VFC = () => {
+  return (
+    <BaseLayout seo={generateSeo(useLocation())}>
+      <CatalogList catalog={catalog} />
+    </BaseLayout>
+  );
+};
 
 export default Catalog;

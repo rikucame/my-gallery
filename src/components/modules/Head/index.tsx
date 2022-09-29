@@ -1,33 +1,42 @@
 import * as React from "react";
-import { memo } from "react";
 import { Helmet } from "react-helmet";
 import { CreateGlobalStyle } from "../../../GrobalStyle";
 
-const url = "https://rikutoishikura.com";
-const title = "Rikuto Ishikura";
-const description = "Rikuto Ishikura | Rikkun | Photographer";
-const faviconPath = "/favicon.svg";
+export type SeoProps = {
+  title: string;
+  absolutePath: string;
+  description?: string;
+  ogImagePath?: string;
+};
 
-const OgpSettings: React.VFC = () => (
-  <>
-    <meta property="og:url" content={url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={`${url}/ogp.jpg`} />
-  </>
-);
-
-export const Head: React.VFC = memo(() => {
+export const Head: React.VFC<SeoProps> = ({
+  title,
+  absolutePath,
+  description,
+  ogImagePath,
+}) => {
+  const domain = "https://rikutoishikura.com";
+  const siteName = "Rikuto Ishikura";
+  const baseDescription = "Rikuto Ishikura | Rikkun | Photographer";
+  const pageTitle = title.length
+    ? `${siteName} | ${title.toUpperCase()}`
+    : siteName;
+  const pageDescription = description || baseDescription;
+  const ogpImage = ogImagePath || `${domain}/ogp.jpg`;
   return (
     <>
       <Helmet>
-        <title>{title}</title>
-        <link rel="shortcut icon" href={faviconPath} type="image/svg" />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta property="og:url" content={`${domain}${absolutePath}`} />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={ogpImage} />
+        <link rel="shortcut icon" href="/favicon.svg" type="image/svg" />
         <link rel="stylesheet" href="https://use.typekit.net/lpr1vrm.css" />
-        <meta name="description" content={description} />
-        <OgpSettings />
       </Helmet>
       <CreateGlobalStyle />
     </>
   );
-});
+};

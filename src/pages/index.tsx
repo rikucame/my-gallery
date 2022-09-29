@@ -1,6 +1,7 @@
 import { graphql } from "gatsby";
 import React from "react";
 import { BaseLayout } from "../components/Layout/BaseLayout";
+import { SeoProps } from "../components/modules/Head";
 import { AllThumbnails, Category, Top } from "../components/Pages/Top";
 
 type PageProps = {
@@ -16,8 +17,12 @@ type PageProps = {
 
 const IndexPage: React.VFC<PageProps> = ({ data }) => {
   const { allThumbnail, count } = data;
+  const seo: SeoProps = {
+    title: "",
+    absolutePath: "",
+  };
   return (
-    <BaseLayout>
+    <BaseLayout seo={seo}>
       <Top categories={count.group} allThumbnails={allThumbnail} />
     </BaseLayout>
   );
