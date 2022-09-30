@@ -20,6 +20,8 @@ type PageProps = {
 };
 
 const viewOrder = ["portrait", "snap", "mood"];
+const orderSort = (x: string, y: string) =>
+  viewOrder.indexOf(x) - viewOrder.indexOf(y);
 
 const IndexPage: React.VFC<PageProps> = ({ data }) => {
   const { allThumbnail, count } = data;
@@ -27,17 +29,20 @@ const IndexPage: React.VFC<PageProps> = ({ data }) => {
     title: "",
     absolutePath: "",
   };
-  const categoryInfos = count.group.map(({ totalCount, fieldValue }) => ({
-    totalCount,
-    fieldValue: fieldValue.split("/").slice(-1)[0],
-  }));
+  const categoryInfos = count.group
+    .map(({ totalCount, fieldValue }) => ({
+      totalCount,
+      fieldValue: fieldValue.split("/").slice(-1)[0],
+    }))
+    .sort((x, y) => orderSort(x.fieldValue, y.fieldValue));
+
   const thumbnails = allThumbnail.edges
     .map(({ node }) => ({
       dir: node.dir.split("/").slice(-1)[0],
       name: node.name,
       childImageSharp: node.childImageSharp,
     }))
-    .sort((x, y) => viewOrder.indexOf(x.dir) - viewOrder.indexOf(y.dir));
+    .sort((x, y) => orderSort(x.dir, y.dir));
   return (
     <BaseLayout seo={seo}>
       <Top categories={categoryInfos} Thumbnails={thumbnails} />
