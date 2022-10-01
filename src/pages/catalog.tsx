@@ -9,8 +9,8 @@ const catalog: CatalogItemsProps = [
     title: "Genre",
     links: [
       { name: "Portrait", path: "/photos/portrait" },
-      { name: "Snap", path: "/photos/snap" },
       { name: "Mood", path: "/photos/mood" },
+      { name: "Snap", path: "/photos/snap" },
     ],
   },
   {
