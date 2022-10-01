@@ -19,7 +19,7 @@ type PageProps = {
   };
 };
 
-const viewOrder = ["portrait", "snap", "mood"];
+const viewOrder = ["portrait", "mood", "snap"];
 const orderSort = (x: string, y: string) =>
   viewOrder.indexOf(x) - viewOrder.indexOf(y);
 
