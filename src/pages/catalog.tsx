@@ -1,14 +1,16 @@
 import * as React from "react";
 import { BaseLayout } from "../components/Layout/BaseLayout";
+import { useLocation } from "@reach/router";
+import { generateSeo } from "../components/Utils/GenerateSeo";
 import { Catalog as CatalogList } from "../components/Pages/Catalog";
 
 const catalog: CatalogItemsProps = [
   {
     title: "Genre",
     links: [
-      { name: "Portrait", path: "/photos/01_portrait" },
-      { name: "Snap", path: "/photos/02_snap" },
-      { name: "Mood", path: "/photos/03_mood" },
+      { name: "Portrait", path: "/photos/portrait" },
+      { name: "Mood", path: "/photos/mood" },
+      { name: "Snap", path: "/photos/snap" },
     ],
   },
   {
@@ -25,10 +27,12 @@ export type CatalogItemsProps = {
   }[];
 }[];
 
-const Catalog: React.VFC = () => (
-  <BaseLayout>
-    <CatalogList catalog={catalog} />
-  </BaseLayout>
-);
+const Catalog: React.VFC = () => {
+  return (
+    <BaseLayout seo={generateSeo(useLocation())}>
+      <CatalogList catalog={catalog} />
+    </BaseLayout>
+  );
+};
 
 export default Catalog;

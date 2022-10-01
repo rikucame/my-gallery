@@ -3,6 +3,8 @@ import { ImageDataLike } from "gatsby-plugin-image";
 import * as React from "react";
 import { BaseLayout } from "../../components/Layout/BaseLayout";
 import { Photos } from "../../components/Templates/Photos";
+import { useLocation } from "@reach/router";
+import { generateSeo } from "../../components/Utils/GenerateSeo";
 
 export type PhotosType = {
   node: {
@@ -21,7 +23,7 @@ type PageProps = {
 
 const PhotosPage: React.VFC<PageProps> = ({ data }) => {
   return (
-    <BaseLayout>
+    <BaseLayout seo={generateSeo(useLocation())}>
       <Photos photos={data.allFile.edges} />
     </BaseLayout>
   );

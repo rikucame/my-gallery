@@ -6,7 +6,7 @@ import { PhotosType } from "../../../templates/photos";
 import { LayoutButton } from "./components/LayoutButton";
 
 const Main = styled.main`
-  margin: 15px 2vw;
+  margin: 20px;
 `;
 
 const ButtonWrap = styled.div`
@@ -18,11 +18,13 @@ const ButtonWrap = styled.div`
 `;
 
 const PhotographWrap = styled.div<{ isTwoColumns: boolean }>`
+  --width: ${({ isTwoColumns }) => (isTwoColumns ? 50 : 100)}vw;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ isTwoColumns }) => (isTwoColumns ? 47 : 96)}vw;
-  height: ${({ isTwoColumns }) => (isTwoColumns ? "47vw" : "auto")};
+  width: calc(var(--width) - 25px);
+  ${({ isTwoColumns }) => isTwoColumns && "height: calc(var(--width) - 20px)"};
 `;
 
 const Photograph = styled(GatsbyImage)`
@@ -33,7 +35,7 @@ const Photographs = styled.div<{ isTwoColumns: boolean }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: ${({ isTwoColumns }) => (isTwoColumns ? 1 : 4)}vw;
+  gap: ${({ isTwoColumns }) => (isTwoColumns ? 10 : 20)}px;
 `;
 
 export const Photos: React.VFC<{ photos: PhotosType }> = ({ photos }) => {

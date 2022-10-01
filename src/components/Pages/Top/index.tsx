@@ -23,7 +23,7 @@ const ThumbnailsWrap = styled.div`
   }
 `;
 
-const Thumbnails = styled.div<{ count: number }>`
+const ThumbnailList = styled.div<{ count: number }>`
   width: ${({ count }) => 95 * count}%;
   display: flex;
   padding: 15px 0;
@@ -94,30 +94,26 @@ export type Category = {
   fieldValue: string;
 };
 
-export type AllThumbnails = {
-  edges: {
-    node: {
-      name: string;
-      dir: string;
-      childImageSharp: ImageDataLike;
-    };
-  }[];
+export type Thumbnail = {
+  name: string;
+  dir: string;
+  childImageSharp: ImageDataLike;
 };
 
 export const Top: React.VFC<{
   categories: Category[];
-  allThumbnails: AllThumbnails;
-}> = ({ categories, allThumbnails }) => {
+  Thumbnails: Thumbnail[];
+}> = ({ categories, Thumbnails }) => {
   const elm = React.useRef<HTMLDivElement>(null);
-  const [viewCategory, setViewCategory] = useState<Category>(
-    categories.slice(-1)[0]
-  );
+  const [viewCategory, setViewCategory] = useState(categories[0]);
 
   const setCategory = useCallback(
     (entry: IntersectionObserverEntry, categoryName: string) => {
       entry.isIntersecting &&
         setViewCategory(
-          categories.find(({ fieldValue }) => fieldValue === categoryName)!
+          categories.find(({ fieldValue }) =>
+            categoryName.includes(fieldValue)
+          )!
         );
     },
     []
@@ -127,36 +123,34 @@ export const Top: React.VFC<{
   useEffect(() => {
     doScroll();
   }, []);
-
   return (
     <Main>
       <Dots>
-        {categories.map(({ fieldValue }) => {
-          return <Dot view={fieldValue === viewCategory.fieldValue} />;
+        {Thumbnails.map(({ dir }) => {
+          return <Dot key={dir} view={dir === viewCategory.fieldValue} />;
         })}
       </Dots>
       <ThumbnailsWrap ref={elm}>
-        <Thumbnails count={allThumbnails.edges.length}>
-          {allThumbnails.edges.map(({ node }) => {
-            const path = node.dir.split("images").slice(-1)[0];
+        <ThumbnailList count={Thumbnails.length}>
+          {Thumbnails.map(({ dir, name, childImageSharp }) => {
             return (
-              <PhotoWrap key={node.dir} to={path} onClick={setScrollLeftAmount}>
-                <Beacon
-                  onChange={(_invew, entry) => setCategory(entry, node.dir)}
-                />
+              <PhotoWrap
+                key={dir}
+                to={`photos/${dir}`}
+                onClick={setScrollLeftAmount}
+              >
+                <Beacon onChange={(_invew, entry) => setCategory(entry, dir)} />
                 <FrameInPhotograph
-                  childImageSharp={node.childImageSharp!}
-                  name={node.name}
+                  childImageSharp={childImageSharp!}
+                  name={name}
                 />
               </PhotoWrap>
             );
           })}
-        </Thumbnails>
+        </ThumbnailList>
       </ThumbnailsWrap>
-      <InfoWrap to={viewCategory.fieldValue.split("images").slice(-1)[0]}>
-        <CategoryName>
-          {viewCategory.fieldValue.split("_").slice(-1)[0].toUpperCase()}
-        </CategoryName>
+      <InfoWrap to={`photos/${viewCategory.fieldValue}`}>
+        <CategoryName>{viewCategory.fieldValue.toUpperCase()}</CategoryName>
         <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
       </InfoWrap>
     </Main>

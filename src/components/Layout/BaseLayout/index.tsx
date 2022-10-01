@@ -1,15 +1,18 @@
 import * as React from "react";
 import { ReactElement } from "react";
 import { Footer } from "../../modules/Footer";
-import { Head } from "../../modules/Head";
+import { Head, SeoProps } from "../../modules/Head";
 import { Header } from "../../modules/Header";
 
-export const BaseLayout: React.VFC<{ children: ReactElement }> = ({
-  children,
-}) => {
+type BaseLayOutProps = {
+  seo: SeoProps;
+  children: ReactElement;
+};
+
+export const BaseLayout: React.VFC<BaseLayOutProps> = ({ children, seo }) => {
   return (
     <React.Fragment>
-      <Head />
+      <Head {...seo} />
       <Header />
       {children}
       <Footer />
