@@ -28,6 +28,7 @@ const PhotographWrap = styled.div<{ isTwoColumns: boolean }>`
 `;
 
 const Photograph = styled(GatsbyImage)`
+  max-width: 800px;
   height: 100%;
 `;
 
