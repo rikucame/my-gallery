@@ -39,7 +39,11 @@ export const pageQuery = graphql`
         node {
           name
           childImageSharp {
-            gatsbyImageData(blurredOptions: { width: 100 }, width: 600)
+            gatsbyImageData(
+              blurredOptions: { width: 100 }
+              width: 1000
+              quality: 100
+            )
           }
         }
       }
