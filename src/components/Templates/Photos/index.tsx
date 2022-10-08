@@ -13,7 +13,7 @@ const ButtonWrap = styled.div`
   position: fixed;
   right: 10px;
   top: 10px;
-  z-index: 100;
+  z-index: 80;
   mix-blend-mode: difference;
 `;
 
