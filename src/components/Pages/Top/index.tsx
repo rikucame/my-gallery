@@ -46,9 +46,6 @@ const PhotoWrap = styled(Link)`
   &:last-child {
     margin-right: 45px;
   }
-  ${greaterThanMediun} {
-    display: block;
-  }
 `;
 
 const Beacon = styled(InView)`
@@ -61,18 +58,6 @@ const InfoWrap = styled(Link)`
   align-self: center;
   display: inline-block;
   margin-top: 20px;
-`;
-
-const InfoWrapSp = styled(InfoWrap)`
-  ${greaterThanMediun} {
-    display: none;
-  }
-`;
-
-const InfoWrapPc = styled(InfoWrap)`
-  ${lessThanMediun} {
-    display: none;
-  }
 `;
 
 const CategoryName = styled.h1`
@@ -168,23 +153,19 @@ export const Top: React.VFC<{
                   childImageSharp={childImageSharp!}
                   name={name}
                 />
-                <InfoWrapPc to={`photos/${dir}`}>
+                <InfoWrap to={`photos/${dir}`}>
                   <CategoryName>
                     {categories[index].fieldValue.toUpperCase()}
                   </CategoryName>
                   <ImagesCount>
                     {categories[index].totalCount} Images
                   </ImagesCount>
-                </InfoWrapPc>
+                </InfoWrap>
               </PhotoWrap>
             );
           })}
         </ThumbnailList>
       </ThumbnailsWrap>
-      <InfoWrapSp to={`photos/${viewCategory.fieldValue}`}>
-        <CategoryName>{viewCategory.fieldValue.toUpperCase()}</CategoryName>
-        <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
-      </InfoWrapSp>
     </Main>
   );
 };
