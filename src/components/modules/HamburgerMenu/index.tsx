@@ -21,7 +21,6 @@ const MenuIcon = styled.button`
     position: absolute;
     background-color: ${colors.blue};
   }
-  mix-blend-mode: difference;
 `;
 
 const OpenMenuIcon = styled(MenuIcon)`
