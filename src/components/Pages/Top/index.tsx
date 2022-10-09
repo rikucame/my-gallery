@@ -5,14 +5,11 @@ import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
 import styled from "styled-components";
 import { memoScrollLeft } from "../../../atoms/memoScrollLeft";
-import { greaterThanMediun, lessThanMediun } from "../../../Styles/mediaQuery";
 import { FrameInPhotograph } from "../../parts/FrameInPhotograph";
 import { colors } from "../../Utils/Colors";
 
 const Main = styled.main`
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
 `;
@@ -135,7 +132,7 @@ export const Top: React.VFC<{
       </Dots>
       <ThumbnailsWrap ref={elm}>
         <ThumbnailList count={Thumbnails.length}>
-          {Thumbnails.map(({ dir, name, childImageSharp }, index) => {
+          {Thumbnails.map(({ dir, name, childImageSharp }) => {
             return (
               <PhotoWrap
                 key={dir}
@@ -147,19 +144,15 @@ export const Top: React.VFC<{
                   childImageSharp={childImageSharp!}
                   name={name}
                 />
-                <InfoWrap to={`photos/${dir}`}>
-                  <CategoryName>
-                    {categories[index].fieldValue.toUpperCase()}
-                  </CategoryName>
-                  <ImagesCount>
-                    {categories[index].totalCount} Images
-                  </ImagesCount>
-                </InfoWrap>
               </PhotoWrap>
             );
           })}
         </ThumbnailList>
       </ThumbnailsWrap>
+      <InfoWrap to={`photos/${viewCategory.fieldValue}`}>
+        <CategoryName>{viewCategory.fieldValue.toUpperCase()}</CategoryName>
+        <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
+      </InfoWrap>
     </Main>
   );
 };
