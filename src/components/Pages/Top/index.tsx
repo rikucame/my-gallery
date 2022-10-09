@@ -31,9 +31,6 @@ const ThumbnailList = styled.div<{ count: number }>`
   display: flex;
   padding: 15px 0;
   transition: all 0.6s ease-out;
-  ${greaterThanMediun} {
-    width: 100%;
-  }
 `;
 
 const PhotoWrap = styled(Link)`
@@ -74,9 +71,6 @@ const ImagesCount = styled.p`
 const Dots = styled.ul`
   display: flex;
   justify-content: center;
-  ${greaterThanMediun} {
-    display: none;
-  }
 `;
 
 const Dot = styled.li<{ view: boolean }>`
