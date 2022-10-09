@@ -5,14 +5,11 @@ import { useState, useEffect, useCallback } from "react";
 import { InView } from "react-intersection-observer";
 import styled from "styled-components";
 import { memoScrollLeft } from "../../../atoms/memoScrollLeft";
-import { greaterThanMediun, lessThanMediun } from "../../../Styles/mediaQuery";
 import { FrameInPhotograph } from "../../parts/FrameInPhotograph";
 import { colors } from "../../Utils/Colors";
 
 const Main = styled.main`
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
 `;
@@ -31,9 +28,6 @@ const ThumbnailList = styled.div<{ count: number }>`
   display: flex;
   padding: 15px 0;
   transition: all 0.6s ease-out;
-  ${greaterThanMediun} {
-    width: 100%;
-  }
 `;
 
 const PhotoWrap = styled(Link)`
@@ -45,9 +39,6 @@ const PhotoWrap = styled(Link)`
   align-items: center;
   &:last-child {
     margin-right: 45px;
-  }
-  ${greaterThanMediun} {
-    display: block;
   }
 `;
 
@@ -61,18 +52,6 @@ const InfoWrap = styled(Link)`
   align-self: center;
   display: inline-block;
   margin-top: 20px;
-`;
-
-const InfoWrapSp = styled(InfoWrap)`
-  ${greaterThanMediun} {
-    display: none;
-  }
-`;
-
-const InfoWrapPc = styled(InfoWrap)`
-  ${lessThanMediun} {
-    display: none;
-  }
 `;
 
 const CategoryName = styled.h1`
@@ -89,9 +68,6 @@ const ImagesCount = styled.p`
 const Dots = styled.ul`
   display: flex;
   justify-content: center;
-  ${greaterThanMediun} {
-    display: none;
-  }
 `;
 
 const Dot = styled.li<{ view: boolean }>`
@@ -126,11 +102,10 @@ export type Thumbnail = {
 
 export const Top: React.VFC<{
   categories: Category[];
-  Thumbnails: Thumbnail[];
-}> = ({ categories, Thumbnails }) => {
+  thumbnails: Thumbnail[];
+}> = ({ categories, thumbnails }) => {
   const elm = React.useRef<HTMLDivElement>(null);
   const [viewCategory, setViewCategory] = useState(categories[0]);
-
   const setCategory = useCallback(
     (entry: IntersectionObserverEntry, categoryName: string) => {
       entry.isIntersecting &&
@@ -142,7 +117,6 @@ export const Top: React.VFC<{
     },
     []
   );
-
   const [_, setScrollLeftAmount, doScroll] = memoScrollLeft(elm);
   useEffect(() => {
     doScroll();
@@ -150,13 +124,13 @@ export const Top: React.VFC<{
   return (
     <Main>
       <Dots>
-        {Thumbnails.map(({ dir }) => {
+        {thumbnails.map(({ dir }) => {
           return <Dot key={dir} view={dir === viewCategory.fieldValue} />;
         })}
       </Dots>
       <ThumbnailsWrap ref={elm}>
-        <ThumbnailList count={Thumbnails.length}>
-          {Thumbnails.map(({ dir, name, childImageSharp }, index) => {
+        <ThumbnailList count={thumbnails.length}>
+          {thumbnails.map(({ dir, name, childImageSharp }) => {
             return (
               <PhotoWrap
                 key={dir}
@@ -168,23 +142,15 @@ export const Top: React.VFC<{
                   childImageSharp={childImageSharp!}
                   name={name}
                 />
-                <InfoWrapPc to={`photos/${dir}`}>
-                  <CategoryName>
-                    {categories[index].fieldValue.toUpperCase()}
-                  </CategoryName>
-                  <ImagesCount>
-                    {categories[index].totalCount} Images
-                  </ImagesCount>
-                </InfoWrapPc>
               </PhotoWrap>
             );
           })}
         </ThumbnailList>
       </ThumbnailsWrap>
-      <InfoWrapSp to={`photos/${viewCategory.fieldValue}`}>
+      <InfoWrap to={`photos/${viewCategory.fieldValue}`}>
         <CategoryName>{viewCategory.fieldValue.toUpperCase()}</CategoryName>
         <ImagesCount>{viewCategory.totalCount} Images</ImagesCount>
-      </InfoWrapSp>
+      </InfoWrap>
     </Main>
   );
 };
