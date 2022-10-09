@@ -24,7 +24,8 @@ export const memoScrollLeft = (
     elm.current!.scrollLeft = atom;
   };
   useEffect(() => {
-    if (elm.current) elm.current.onscroll = updateAmount;
+    elm.current?.addEventListener("scroll", updateAmount);
+    return elm.current?.removeEventListener("scroll", updateAmount);
   }, []);
 
   return [atom, customSetAtom, doScroll];

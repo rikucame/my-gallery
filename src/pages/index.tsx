@@ -1,8 +1,9 @@
 import { graphql } from "gatsby";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BaseLayout } from "../components/Layout/BaseLayout";
 import { SeoProps } from "../components/modules/Head";
-import { Thumbnail, Category, Top } from "../components/Pages/Top";
+import { Thumbnail, Category, Top as SpView } from "../components/Pages/Top";
+import { PcView } from "../components/Pages/Top/PcView";
 
 type PageProps = {
   location: any;
@@ -29,6 +30,7 @@ const IndexPage: React.VFC<PageProps> = ({ data }) => {
     title: "",
     absolutePath: "",
   };
+  const [isPc, setIsPc] = useState(false);
   const categoryInfos = count.group
     .map(({ totalCount, fieldValue }) => ({
       totalCount,
@@ -43,9 +45,16 @@ const IndexPage: React.VFC<PageProps> = ({ data }) => {
       childImageSharp: node.childImageSharp,
     }))
     .sort((x, y) => orderSort(x.dir, y.dir));
+  useEffect(() => {
+    setIsPc(window.innerWidth >= 768);
+  }, []);
   return (
     <BaseLayout seo={seo}>
-      <Top categories={categoryInfos} Thumbnails={thumbnails} />
+      {isPc ? (
+        <PcView categories={categoryInfos} thumbnails={thumbnails} />
+      ) : (
+        <SpView categories={categoryInfos} thumbnails={thumbnails} />
+      )}
     </BaseLayout>
   );
 };

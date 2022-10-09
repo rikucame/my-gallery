@@ -102,11 +102,10 @@ export type Thumbnail = {
 
 export const Top: React.VFC<{
   categories: Category[];
-  Thumbnails: Thumbnail[];
-}> = ({ categories, Thumbnails }) => {
+  thumbnails: Thumbnail[];
+}> = ({ categories, thumbnails }) => {
   const elm = React.useRef<HTMLDivElement>(null);
   const [viewCategory, setViewCategory] = useState(categories[0]);
-
   const setCategory = useCallback(
     (entry: IntersectionObserverEntry, categoryName: string) => {
       entry.isIntersecting &&
@@ -118,7 +117,6 @@ export const Top: React.VFC<{
     },
     []
   );
-
   const [_, setScrollLeftAmount, doScroll] = memoScrollLeft(elm);
   useEffect(() => {
     doScroll();
@@ -126,13 +124,13 @@ export const Top: React.VFC<{
   return (
     <Main>
       <Dots>
-        {Thumbnails.map(({ dir }) => {
+        {thumbnails.map(({ dir }) => {
           return <Dot key={dir} view={dir === viewCategory.fieldValue} />;
         })}
       </Dots>
       <ThumbnailsWrap ref={elm}>
-        <ThumbnailList count={Thumbnails.length}>
-          {Thumbnails.map(({ dir, name, childImageSharp }) => {
+        <ThumbnailList count={thumbnails.length}>
+          {thumbnails.map(({ dir, name, childImageSharp }) => {
             return (
               <PhotoWrap
                 key={dir}
