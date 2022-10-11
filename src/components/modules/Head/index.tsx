@@ -2,24 +2,6 @@ import * as React from "react";
 import { Helmet } from "react-helmet";
 import { CreateGlobalStyle } from "../../../GrobalStyle";
 
-const GATag = () => (
-  <>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-7ZTPC2JX51"
-    />
-    <script>
-      {`
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-7ZTPC2JX51');
-`}
-    </script>
-  </>
-);
-
 export type SeoProps = {
   title: string;
   absolutePath: string;
@@ -53,7 +35,6 @@ export const Head: React.VFC<SeoProps> = ({
         <meta property="og:image" content={ogpImage} />
         <link rel="shortcut icon" href="/favicon.svg" type="image/svg" />
         <link rel="stylesheet" href="https://use.typekit.net/lpr1vrm.css" />
-        <GATag />
       </Helmet>
       <CreateGlobalStyle />
     </>
