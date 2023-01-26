@@ -15,9 +15,11 @@ const SocialMediaLinkList = styled.div`
 const socialMediaLinks = [
   {
     IconImage: TiSocialTwitter,
+    link: "https://twitter.com/rikton_0318"
+  },
+  { IconImage: TiSocialInstagram,
     link: "https://www.instagram.com/rikton_0318/",
   },
-  { IconImage: TiSocialInstagram, link: "https://twitter.com/rikton_0318" },
 ];
 
 export const SocialMediaLinks: React.VFC = () => (
